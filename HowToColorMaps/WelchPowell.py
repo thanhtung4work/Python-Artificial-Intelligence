@@ -3,10 +3,10 @@ COLOR = ['red', 'blue', 'green', 'yellow', 'violet', 'orange']
 
 TestGraph = [
   [0, 1, 1, 0, 1, 0, 0],
-  [1, 0, 1, 0, 1, 0, 1],
-  [1, 1, 0, 1, 1, 1, 0],
+  [1, 0, 1, 0, 0, 0, 1],
+  [1, 1, 0, 1, 0, 1, 0],
   [0, 0, 1, 0, 0, 0, 0],
-  [1, 1, 1, 0, 0, 1, 1],
+  [1, 1, 0, 0, 0, 1, 1],
   [0, 0, 1, 0, 1, 0, 1],
   [0, 0, 0, 0, 1, 1, 0]
 ]
@@ -45,33 +45,43 @@ def printVertexArray(vArray):
     print(v.name, v.degree, v.color)
 
 
+def isConnectWith(graph, vArray, vCheck, color):
+  for v in vArray:
+    if v.color == color:
+      if isConnected(graph, vCheck.name, v.name) == 1:
+        return True
+  
+  return 0
+
 def greedyColoring(graph, sortedArray):
-  index = 1
-  color = 1
+  index = 0
+  color = 0
   # color the biggest
   sortedArray[0].color = COLOR[0]
 
-  # set current = second
-  current = sortedArray[index]
+  # set current = first
+  current = sortedArray[0]
 
   # color vertes not connect with biggest
   while index < LENG - 1:
-    # color the next biggest if not colored
-    if current.color == '':
-      current.color = COLOR[color]
     for i in range(LENG):
       # skip itself or previous biggest
       if sortedArray[i].name == current.name or i < index:
         continue
       
-      # if smaller not colered and not connected to biggest => color it
-      if sortedArray[i].color == '' and isConnected(graph, sortedArray[i].name, current.name) == 0:
-        sortedArray[i].color = COLOR[color]
+      # if smaller not colered and not connected to biggest vertex's color => color it
+      if sortedArray[i].color == '':
+        # check if the vectex connected with any current color
+        if isConnectWith(graph, sortedArray, sortedArray[i], COLOR[color]) == False:
+          sortedArray[i].color = COLOR[color]
 
-    # change next biggest and color
-    index += 1
     color += 1
+    # update current
+    index += 1
     current = sortedArray[index]
+    # color the next biggest if not colored
+    if current.color == '':
+      current.color = COLOR[color]
 
   return sortedArray
   
