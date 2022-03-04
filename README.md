@@ -5,3 +5,4 @@
 What have I done:
 
 1. Greedy Traveling Saleman (GTS)
+2. Graph Coloring
